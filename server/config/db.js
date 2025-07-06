@@ -17,14 +17,12 @@ async function connectToMongoDB() {
 }
 
 
-let flightBookingDB, userManagementDB, paymentDB;
 
+let flightBookingDB;
 connectToMongoDB().then(() => {
   
-    flightBookingDB = mongoose.connection.useDb('flight-booking');
-    userManagementDB = mongoose.connection.useDb('user-management');
-    paymentDB = mongoose.connection.useDb('payment-system');
-    
+    flightBookingDB = mongoose.connection.useDb('flightAPI');
+   
     console.log('Databases connected');
 }).catch(err => {
     console.error('Failed to connect to databases:', err);
@@ -33,6 +31,5 @@ connectToMongoDB().then(() => {
 module.exports = {
     connectToMongoDB,
     getFlightBookingDB: () => flightBookingDB,
-    getUserManagementDB: () => userManagementDB,
-    getPaymentDB: () => paymentDB
+  
 };

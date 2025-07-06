@@ -6,19 +6,21 @@ const router = express.Router();
 
 
 
-const Flight = require('../models/flight');
-const express = require('express');
-const { connectToMongoDB } = require('./database');
-const getFlightModel = require('./models/Flight');
- const app = express();
+
+
+
+const getFlightModel = require('./../models/flight');
+
+ 
 
 
 
 
-router.get('/search-flights', async (req, res)=>{
+router.get('/search-flights', async (req,res)=>{
 
       try {
-        const flights = await Flight.find();
+         const Flight = getFlightModel();
+        const flights = await  Flight.find();
         res.json(flights);
              } 
              catch(error){
@@ -30,7 +32,7 @@ router.get('/search-flights', async (req, res)=>{
 router.get('/flight/id', async (req, res)=>{
      
 
-     try{
+     try{const Flight = getFlightModel();
            const {from , to, fromCity, toCity }= req.query;
   const query = {};
         if (from) query['route.from'] = from;
@@ -48,7 +50,7 @@ router.get('/flight/id', async (req, res)=>{
 
 
 router.get('/flight/:airline', async(req, res)=>{
-  try{
+  try{const Flight = getFlightModel();
     const {airline}= req.params;
     const flight = await Flight.find({ airline: airline});
     res.json(flight);
@@ -59,7 +61,7 @@ router.get('/flight/:airline', async(req, res)=>{
 });
 
 router.get('/flights/price-range', async(req, res)=>{
-  try{
+  try{const Flight = getFlightModel();
     const{minPrice, maxPrice, classType}= req.query;
     const query = {};
     if( min && max){

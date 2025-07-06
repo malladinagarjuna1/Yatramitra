@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const { getFlightBookingDB } = require('../database');
+const { getFlightBookingDB } = require('../config/db');
 
-// Define flight schema
+
 const flightSchema = new mongoose.Schema({
     flightNumber: String,
     airline: String,
@@ -17,7 +17,6 @@ const flightSchema = new mongoose.Schema({
     }
 });
 
-// Function to get Flight model
 const getFlightModel = () => {
     const flightBookingDB = getFlightBookingDB();
     if (!flightBookingDB) {
@@ -25,5 +24,7 @@ const getFlightModel = () => {
     }
     return flightBookingDB.model('Flight', flightSchema, 'flights');
 };
+
+
 
 module.exports = getFlightModel;
