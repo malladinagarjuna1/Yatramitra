@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const User = require('./../models/user');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const Forgot= require('./../models/Forgot');
 
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
@@ -112,40 +114,53 @@ console.log("Hashed password from DB:", user.password);
 });
 
 
-router.post('/requestPasswordReset', (req, res) => {
-  const { email } = req.body;
+router.post('/requestPasswordReset', async (req, res) => {
+ try{
+  const{email}= req.body;
+  const user=  await User.findOne({email:email});
+  if(!user){
+    return res.status(400).json({message: "User does not exist"});
 
-  try {
-    const user = User.findOne({ email });
-
-    if (!user) return res.status(404).json({ message: "User does'nt exist" });
-
-    const secret = process.env.JWT_SECRET_KEY + user.password;
-    const token = jwt.sign({ email: user.email }, secret, { expiresIn: '1h' });
-
-    const resetURL = `https://localhost:5000/resetpassword?id=${user._id}&token=${token}`;
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'malladinagarjuna1@gmail.com',
-        pass: 'password'
-      },
-    });
-    const mailOptions = {
-      to: user.email,
-      from: process.env.EMAIL,
-      subject: 'Password Reset Request',
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-      Please click on the following link, or paste this into your browser to complete the process:\n\n
-      ${resetURL}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-
-    };
-    transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Password reset link sent' });
-  } catch (error) {
-    res.status(500).json({ message: 'Something went wrong' });
   }
+  const token = crypto.randomBytes(20).toString('hex');
+  const expires =Date.now() + 3600000;
+  await Forgot.findOneAndUpdate({email:email},
+    {email, token, expires},
+   {upsert: true, new: true} );
+   const resetLink = `http://localhost:5173/forgot-password?token=${token}`;
+   const mail = process.env.EMAIL;
+   const pass= process.env.EMAIL_PASS;
+   const transporter = nodemailer.createTransport({
+    service: "gmail",
+    host:"smtp.gmail.com",
+    port:587,
+    secure: false,
+    auth:{/*qhyw rdub ypoq tmmp*/
+      
+      user: mail,
+      pass: pass
+    },
+   });
+   const mailOptions = {
+    from:{  
+      name: "Yatra Mitra",
+      address: mail
+    },
+    to: email,
+    subject: "forgot password",
+    text: `You are receiving this because you (or someone else) have requested to reset your password. Please click the following link, or paste it into your browser to complete the process: ${resetLink}`,
+   };
+  await  transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error(error);
+    
+  return res.status(200).json({ message: "Email sent" });
+  }
+  
+});
+router.get("/verify",(req,res)=>{
+  return res.status(200).json({message:"User is logged in"});
+ 
 });
 router.post('/resetPassword', (req, res) => {
   const { token } = req.params;
