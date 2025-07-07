@@ -21,6 +21,7 @@ router.get('/search-flights', async (req,res)=>{
       try {
          const Flight = getFlightModel();
         const flights = await  Flight.find();
+        console.log(getFlightModel);
         res.json(flights);
              } 
              catch(error){
@@ -39,9 +40,11 @@ router.get('/flight/id', async (req, res)=>{
         if (to) query['route.to'] = to;
         if (fromCity) query['route.fromCity'] = fromCity;
         if (toCity) query['route.toCity'] = toCity;
+        console.log(query);
         
         const flights = await Flight.find(query);
         res.json(flights);
+        
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -52,7 +55,8 @@ router.get('/flight/id', async (req, res)=>{
 router.get('/flight/:airline', async(req, res)=>{
   try{const Flight = getFlightModel();
     const {airline}= req.params;
-    const flight = await Flight.find({ airline: airline});
+  const flight = await Flight.find({ airline: new RegExp(airline, 'i') });
+
     res.json(flight);
 
   }catch(error){
@@ -64,7 +68,7 @@ router.get('/flights/price-range', async(req, res)=>{
   try{const Flight = getFlightModel();
     const{minPrice, maxPrice, classType}= req.query;
     const query = {};
-    if( min && max){
+    if( minPrice && maxPrice){
       if(classType === 'economy'){
         query['pricing.economy']= {$gte:parseInt(minPrice), $lte:parseInt(maxPrice) };
 
@@ -73,6 +77,7 @@ router.get('/flights/price-range', async(req, res)=>{
 
       }
     }
+     console.log(query);
     const flights= await Flight.find(query);
     res.json(flights);
 
