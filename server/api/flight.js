@@ -21,7 +21,7 @@ router.get('/search-flights', async (req,res)=>{
       try {
          const Flight = getFlightModel();
         const flights = await  Flight.find();
-        console.log(getFlightModel);
+        console.log(flights);
         res.json(flights);
              } 
              catch(error){

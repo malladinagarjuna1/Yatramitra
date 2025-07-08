@@ -10,13 +10,17 @@ app.use(express.json());
 const UserRouter = require('./api/user.js');
 app.use('/', UserRouter);
 
+
+const FlightRouter = require('./api/flight');
+app.use('/api', FlightRouter);
+const seatRouter = require('./api/seat');
+app.use('/api', seatRouter);
 app.listen(port, () =>{
     console.log(`server is running on port ${port}`);
 
 })
 
-const FlightRouter = require('./api/flight');
-app.use('/api', FlightRouter);
+
 app.post('/payment',async (req, res)=>{
     const product = await stripe.products.create({
         name: "T-shirt"

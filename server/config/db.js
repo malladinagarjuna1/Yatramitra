@@ -9,7 +9,7 @@ async function connectToMongoDB() {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-        console.log('Connected to MongoDB cluster');
+        console.log('Connected to  flights MongoDB cluster');
     } catch (error) {
         console.error('Connection error:', error);
         throw error;
@@ -18,15 +18,17 @@ async function connectToMongoDB() {
 
 
 
-let flightBookingDB;
+let flightBookingDB, seatbookingDB;
 connectToMongoDB().then(() => {
   
-    flightBookingDB = mongoose.connection.useDb('flightAPI');
+    flightBookingDB = mongoose.connection.useDb('test');
+    
    
-    console.log('Databases connected');
+    console.log('Database test is connected');
 }).catch(err => {
     console.error('Failed to connect to databases:', err);
 });
+
 
 module.exports = {
     connectToMongoDB,
