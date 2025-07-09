@@ -8,31 +8,22 @@ import Auth from "./lib/pages/auth/auth.jsx";
 import Chat from "./lib/pages/chat/chat.jsx";
 import Profile from "./lib/pages/profile/profile.jsx";
 import  ForgotPassword from "./lib/pages/forgotpassword.jsx";
-
+import axios from 'axios' 
 
 
 function App() {
   const [count, setCount] = useState(0)
 const buyfunction = async () =>{
-  let response = await axios.post('https://localhost:3001/payment');
+  let response = await axios.post('https://localhost:5000/payment');
   if(response && response.status === 200){
+    window.location.href= response.data.url;
     console.log(response.data);
     
   }
 }
   return (
     <>
-<BrowserRouter>
-<Routes>
-      <Route path="/auth" element={<Auth />}/>
-      <Route path ="/chat"  element ={<Chat/>}/>
-      <Route path = "/profile" element ={<Profile />}/>
-      <Route path ="*" element={<Navigate to="/auth" />}/>
-       <Route path="/forgot-password"element ={<ForgotPassword/>}/>
-  
 
-      </Routes>
-</BrowserRouter>
 <button onClick={ buyfunction }>
 book tickets
 </button>

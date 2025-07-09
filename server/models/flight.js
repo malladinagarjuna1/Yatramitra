@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { getFlightBookingDB } = require('../config/db');
+const { getFlightBookingDB } = require('../config/seat');
 
 
 const flightSchema = new mongoose.Schema({
