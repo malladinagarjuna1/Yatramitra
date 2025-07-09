@@ -1,25 +1,20 @@
 const mongoose = require('mongoose');
-const {getpassengerDB} = require('.././config/passenger');
+const { getpassengerDB , connectToMongoDB} = require('.././config/seat');
 
-const passengerSchema = new  mongoose.Schema({
-    firstandMiddlename: String,
-    LastName: String, 
-    Dateofbirth: String,
-
+const passengerSchema = new mongoose.Schema({
+  firstandMiddleName: String,
+  LastName: String,
+  Dateofbirth: String,
 });
-
-const getpassengerModel = () => {
-    const passengerDB = getpassengerDB();
-    if (!passengerDB) {
-        throw new Error('Database not connected yet');
-    }
-    const Passenger= passengerDB.model('Passenger', passengerSchema, 'passenger');
-      console.log(" Connected to collection:", Passenger.collection.name); 
-    return Passenger;
-    
-    
-};
-
-
-
-module.exports = getpassengerModel;
+let Passenger = null;
+async function initializePassengerModel() {
+  await connectToMongoDB();
+  const db =   getpassengerDB()  ;
+  
+  if (!db) throw new Error('Database not connected');
+  
+  Passenger = db.model('Passenger', passengerSchema, 'passenger');
+  console.log('Passenger model initialized');
+  return Passenger;
+}
+module.exports = initializePassengerModel;

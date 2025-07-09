@@ -4,10 +4,12 @@ const app = express();
 const port =5000;
 const stripe = require('stripe')('pk_test_51Rfg0HQuMy4lD6Qs8iokYZTQEjKXhJMjN151bp4FRAw4Kn7CPTs51OCurAmV62Z8vn64dygqPBKqnWx9gJqgQlGh00CJPx7G2R') 
 const cors = require('cors');
-
+const { connectToMongoDB } = require('./config/seat');
 
 app.use(cors());
-const UserRouter = require('./api/user.js');
+connectToMongoDB()
+  .then(() => {
+ const UserRouter = require('./api/user.js');
 app.use('/', UserRouter);
 app.get('/',(req, res)=>{
     res.send('Hello World');
@@ -19,13 +21,12 @@ app.use('/api', FlightRouter);
 const seatRouter = require('./api/seat');
 app.use('/api', seatRouter);
 const passengers = require('./api/passenger.js');
+app.use(express.json());
 app.use('/api', passengers);
 app.listen(port, () =>{
     console.log(`server is running on port ${port}`);
 
-})
-
-
+});
 app.post('/payment',async (req, res)=>{
     const product = await stripe.products.create({
         name: "T-shirt"
@@ -58,3 +59,11 @@ app.post('/payment',async (req, res)=>{
     res.json(session);
 
 })
+
+  })
+  .catch(err => {
+    console.error('Failed to initialize application:', err);
+    process.exit(1);
+  });
+
+
