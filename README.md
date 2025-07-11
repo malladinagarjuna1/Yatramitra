@@ -1,24 +1,24 @@
-# 🧳 Yatramitra – Travel Ticket Booking Platform
+#  Yatramitra – Travel Ticket Booking Platform
 
 Yatramitra is a full-stack travel ticket booking application that allows users to book **flight**, **train**, and **bus** tickets seamlessly. Built using the MERN stack, it offers real-time seat locking, payment integration with Stripe, and email notifications via Nodemailer.
 
 ---
 
-## 🚀 Features
+##  Features
 
-- ✈️ **Multi-mode travel booking** – Flights, Trains, and Buses
-- 🎫 **Interactive Seat Selection** – Real-time clickable seat maps
-- 🔒 **Seat Locking Mechanism** – Prevents double booking by locking seats during payment
-- 💳 **Stripe Payment Integration** – Secure and smooth checkout experience
-- 📧 **Email Confirmation** – Get instant booking confirmation via email using Nodemailer
-- 👤 **User Authentication** – JWT-based login and registration
-- 🛠️ **Admin Panel** – Add/manage routes, vehicles, pricing, and view bookings
-- 📊 **Database Clustering** – Scalable MongoDB setup with collections for flights, trains, buses, users, bookings, etc.
-- 🖥️ **Responsive UI** – Clean and intuitive React frontend
+-  **Multi-mode travel booking** – Flights, Trains, and Buses
+-  **Interactive Seat Selection** – Real-time clickable seat maps
+-  **Seat Locking Mechanism** – Prevents double booking by locking seats during payment
+-  **Stripe Payment Integration** – Secure and smooth checkout experience
+-  **Email Confirmation** – Get instant booking confirmation via email using Nodemailer
+-  **User Authentication** – JWT-based login and registration
+-  **Admin Panel** – Add/manage routes, vehicles, pricing, and view bookings
+-  **Database Clustering** – Scalable MongoDB setup with collections for flights, trains, buses, users, bookings, etc.
+-  **Responsive UI** – Clean and intuitive React frontend
 
 ---
 
-## 🧑‍💻 Tech Stack
+## Tech Stack
 
 | Technology        | Description                     |
 |------------------|---------------------------------|
@@ -33,5 +33,5 @@ Yatramitra is a full-stack travel ticket booking application that allows users t
 
 ---
 
-## 📂 Folder Structure
+
 
