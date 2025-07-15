@@ -9,7 +9,8 @@ const flightSchema = new mongoose.Schema({
         from: String,
         to: String,
         fromCity: String,
-        toCity: String
+        toCity: String,
+        date:String
     },
     pricing: {
         economy: Number,

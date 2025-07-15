@@ -1,0 +1,150 @@
+body{
+        margin:0;
+        padding:0;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f8fb;
+}
+.flight-booking-container{
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 28px;
+      background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.header h2{
+    text-align: center;
+    color: #333;
+    margin-bottom: 24px;
+}
+.green{
+     color: #20bb70;
+}
+
+.date-selector {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.date-tab {
+  background-color: #eaf1fa;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #333;
+  min-width: 100px;
+  box-shadow: inset 0 0 0 1px #ccc;
+}
+
+.date-tab.selected {
+  background-color: #2363d1;
+  color: #ffffff;
+  font-weight: bold;
+  box-shadow: inset 0 0 0 2px #205cc5;
+}
+
+
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.flight-card {
+  background-color: #ffffff;
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid #dde7f2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.flight-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.flight-number {
+  font-weight: 600;
+  color: #2262d1;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.flight-times span {
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.duration {
+  margin: 0 10px;
+  font-size: 13px;
+  color: #6a789c;
+}
+
+.airport {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Pricing Section */
+
+.flight-pricing {
+  text-align: right;
+}
+
+.cabin {
+  font-size: 13px;
+  color: #666;
+}
+
+.price {
+  font-size: 17px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+/* ========= Loader & Errors ========= */
+
+.error {
+  padding: 12px;
+  background-color: #ffe5e5;
+  color: #c82333;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.loading {
+  text-align: center;
+  padding: 12px;
+  font-style: italic;
+}
+
+/* ========= Responsive ========= */
+
+@media screen and (max-width: 600px) {
+  .flight-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flight-pricing {
+    text-align: left;
+    margin-top: 10px;
+  }
+
+  .date-tab {
+    min-width: 80px;
+  }
+}
+

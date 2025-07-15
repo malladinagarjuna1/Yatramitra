@@ -4,6 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-11-15' // Use stable version
 });
 
+router.get('')
 router.post('/create-checkout-session', async (req, res) => {
   try {
   const session = await stripe.checkout.sessions.create({

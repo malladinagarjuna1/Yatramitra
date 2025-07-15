@@ -34,12 +34,13 @@ router.get('/flight/id', async (req, res)=>{
      
 
      try{const Flight = getFlightModel();
-           const {from , to, fromCity, toCity }= req.query;
+           const {from , to, fromCity, toCity, date }= req.query;
   const query = {};
         if (from) query['route.from'] = from;
         if (to) query['route.to'] = to;
         if (fromCity) query['route.fromCity'] = fromCity;
         if (toCity) query['route.toCity'] = toCity;
+        if(date)query['route.date']= date;
         console.log(query);
         
         const flights = await Flight.find(query);
@@ -87,4 +88,5 @@ router.get('/flights/price-range', async(req, res)=>{
       res.status(500).json({error: error.message});
   }
 })
+router.post('/')
 module.exports = router;
