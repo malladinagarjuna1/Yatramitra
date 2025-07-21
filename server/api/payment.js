@@ -4,24 +4,25 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-11-15' // Use stable version
 });
 
-router.get('')
+
 router.post('/create-checkout-session', async (req, res) => {
+  const { amount, passengers, email, flightNumber, seatNumbers } = req.body;
+
   try {
-  const session = await stripe.checkout.sessions.create({
-  line_items: [{
-    price_data: {
-      currency: 'inr',
-      product_data: { name: 'Flight Ticket' },
-unit_amount: Math.round(100 * 100) // Ensure integer value
-    },
-    quantity: 1,
-  }],
-  mode: 'payment',
-  success_url: 'http://localhost:5173/success',
-  cancel_url: 'http://localhost:5173/cancel',
-  customer_email: req.body.email || 'customer@example.com',
- 
-});
+    const session = await stripe.checkout.sessions.create({
+      line_items: [{
+        price_data: {
+          currency: 'inr',
+          product_data: { name: 'Flight Ticket' },
+          unit_amount: Math.round(amount * 100), // Amount in paise
+        },
+        quantity: passengers,
+      }],
+      mode: 'payment',
+      success_url: `http://localhost:5173/success?flightNumber=${flightNumber}&seatNumbers=${seatNumbers.join(',')}`,
+      cancel_url: 'http://localhost:5173/cancel',
+      customer_email: email || 'customer@example.com',
+    });
 
     res.json({ url: session.url });
   } catch (err) {

@@ -1,20 +1,33 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import DropDownMenu from '../src/lib/pages/components/dropdown/dropdown.jsx';
 import FlightSearch from '../src/lib/pages/components/flight search component/flightsearchcomponent.jsx';
-import './App.css';
 import GetFlights from '../src/lib/pages/get flights/getflights.jsx';
-
+import './App.css';
+import SeatSelectionWrapper from '../src/lib/pages/wrappercontent/wrappercontent.jsx';
+import CheckoutButton from './lib/pages/payment/payment.jsx';
+import Login from './lib/pages/login/login.jsx';
+import SignupPage from './lib/pages/signup/signup.jsx';
+import PaymentSuccess from './lib/pages/payment/success.jsx';
+import PaymentCancel from './lib/pages/payment/cancel.jsx';
+import React from 'react';
 function App() {
   return (
     <BrowserRouter>
-      <div className='header' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'flex-start' }}>
+      <div
+        className='header'
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '20px',
+          alignItems: 'flex-start',
+        }}
+      >
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/ALLEN_Career_Institute_logo.svg/941px-ALLEN_Career_Institute_logo.svg.png?20230622120943"
           alt="Yatramitra"
           style={{ height: '50px' }}
         />
 
-        {/* Navigation Links */}
         <Link to="/" className="nav-link" style={{ marginLeft: '250px', marginTop: '15px' }}>
           <DropDownMenu label="Home" items={["NEET", "JEE (Main+Advanced)", "JEE Main"]} />
         </Link>
@@ -36,35 +49,45 @@ function App() {
         <Link to="/Allenestore" className="nav-link" style={{ marginTop: '15px' }}>
           <DropDownMenu label="Contact Us" />
         </Link>
-        <Link to="/More" className="nav-link" style={{ marginTop: '15px' }}>
+        <Link to="/More" className="nav-link" style={{ marginTop: '15.jsx' }}>
           <DropDownMenu label="More" />
         </Link>
       </div>
 
-      <Routes>
       
+      <Routes>
         <Route path="/flight" element={<GetFlights />} />
+        <Route path="/seatMap" element={<SeatSelectionWrapper />} />
+        <Route path="/success" element={<PaymentSuccess />} />
+        <Route path="/cancel" element={<PaymentCancel />} />
+        
+        <Route path="/" element={
+          <>
+            <div>
+              <h2>Yatramita - YOUR BEST TRAVEL COMPANION</h2>
+            </div>
 
-
-        <Route
-          path="/"
-          element={
-            <>
+<div style={{ paddingLeft: '350px', paddingTop: '200px', display: 'flex' }}>
+  <FlightSearch />
+</div>
+<div>
+  <h2>Popular Destinations</h2>
+</div>
+          
+        
               <div>
-                <h2>Yatramita - YOUR BEST TRAVEL COMPANION</h2>
-              </div>
+<button>Search flights</button>
+      </div>
+      </>}/>
+      <Route path ="/payment-page" element={<>
+      <CheckoutButton/></>}/>
 
-              <div style={{ paddingLeft: '350px', paddingTop: '200px', display: 'flex', flexDirection: 'center' }}>
-                <FlightSearch />
-              </div>
+  
+      <Route path ="/login" element ={<><Login/></>}/>
+      <Route path ="/signup" element ={<><SignupPage/></>}/>
 
-              <div>
-                <h2>Popular Destinations</h2>
-              </div>
-            </>
-          }
-        />
-      </Routes>
+    
+    </Routes>
     </BrowserRouter>
   );
 }

@@ -1,0 +1,18 @@
+.seat-selection-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.seat-schema-container {
+  flex: 1;
+}
+
+.passenger-details-container {
+  flex: 1;
+  display: none; /* Initially hidden */
+}
+
+.passenger-details-container.open {
+  display: block; /* Shown when a seat is selected */
+}

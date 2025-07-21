@@ -8,9 +8,9 @@ const mongoose= require('mongoose');
 
 
 
-const getseatModel  = require("./../models/seat")
+const getSeatModel = require('../models/seat');
 router.post('/addaseat', async(req, res)=>{
-      try {const Seat = getseatModel();
+      try {const Seat = getSeatModel();
          const { seatNumber, flightNumber} = req.body;
      
          
@@ -27,77 +27,103 @@ router.post('/addaseat', async(req, res)=>{
        }
 });
 
-router.get('/seats', async(req, res)=>{
-   try{ const Seat = getseatModel();
-    console.log(Seat);
-    const seats = await Seat.find();
-    console.log(seats);
-    res.json(seats);}
-    catch(err){
-     console.log("not able to get the seats", err);
-    }
-});
-
-
-
-
-router.put('/seats/book', async (req, res) => {
+router.get('/seats', async (req, res) => {
   try {
-    const Seat = getseatModel();
-
-    const { flightNumber, seatNumber } = req.body;
-
-    console.log("flightId:", flightNumber);
-    console.log("seatNumber:", seatNumber);
-
-    
-    const seat = await Seat.findOne({
-  flightNumber: flightNumber,
-  seatNumber: seatNumber,
-});
-
-    console.log("Found seat:", seat);
-
-    if (!seat) {
-      return res.status(404).json({ error: "Seat not found" });
+    const Seat = getSeatModel();
+    const { flightNumber } = req.query;
+    if (!flightNumber) {
+      return res.status(400).json({ error: "Flight number is required" });
     }
-
-    if (seat.status !== 'available') {
-      return res.status(400).json({ error: "Seat is not available" });
-    }
-
-    seat.status = 'locked';
-    seat.lockedAt = new Date();
-
-    await seat.save();
-
-    res.json({ message: 'Seat locked successfully' });
-
+    const seats = await Seat.find({ flightNumber: flightNumber });
+    res.json(seats);
   } catch (err) {
-    console.error(" Failed to lock seat:", err);
+    console.error("not able to get the seats", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.put('/book/:seatid', async(req, res)=>{
-   try{  const Seat = getseatModel();
- 
-    const seat = await Seat.findById(req.params.seatId);
-     if(!seat || !seat.status == 'locked'){
-        return res.status(400).json({message:"seat not locked or already locked "});
 
-     }
-    seat.status= 'booked';
-seat.locked= null;
-await seat.save();
 
-res.json({message: 'Seat booked successfully'});}
-catch(err){
-     console.log("not able to book a particular seat",err);
-}
+
+// Function to release expired locks
+const releaseExpiredLocks = async () => {
+  const Seat = getSeatModel();
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+  await Seat.updateMany(
+    { status: 'locked', lockedAt: { $lt: fiveMinutesAgo } },
+    { $set: { status: 'available', lockedAt: null } }
+  );
+};
+
+// Schedule the lock release function to run periodically
+setInterval(releaseExpiredLocks, 60 * 1000); // Every minute
+
+router.put('/seats/lock', async (req, res) => {
+  try {
+    const Seat = getSeatModel();
+    const { flightNumber, seatNumbers } = req.body;
+
+    const seats = await Seat.find({
+      flightNumber: flightNumber,
+      seatNumber: { $in: seatNumbers },
+    });
+
+    if (seats.length !== seatNumbers.length) {
+      return res.status(404).json({ error: "One or more seats not found" });
+    }
+
+    for (const seat of seats) {
+      if (seat.status !== 'available') {
+        return res.status(400).json({ error: `Seat ${seat.seatNumber} is not available` });
+      }
+    }
+
+    const lockedAt = new Date();
+    await Seat.updateMany(
+      { _id: { $in: seats.map(s => s._id) } },
+      { $set: { status: 'locked', lockedAt: lockedAt } }
+    );
+
+    res.json({ message: 'Seats locked successfully' });
+
+  } catch (err) {
+    console.error(" Failed to lock seats:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-router,
+router.put('/seats/book', async (req, res) => {
+  try {
+    const Seat = getSeatModel();
+    const { flightNumber, seatNumbers } = req.body;
+
+    const seats = await Seat.find({
+      flightNumber: flightNumber,
+      seatNumber: { $in: seatNumbers },
+    });
+
+    if (seats.length !== seatNumbers.length) {
+      return res.status(404).json({ error: "One or more seats not found" });
+    }
+
+    for (const seat of seats) {
+      if (seat.status !== 'locked') {
+        return res.status(400).json({ error: `Seat ${seat.seatNumber} is not locked` });
+      }
+    }
+
+    await Seat.updateMany(
+      { _id: { $in: seats.map(s => s._id) } },
+      { $set: { status: 'booked', lockedAt: null } }
+    );
+
+    res.json({ message: 'Seats booked successfully' });
+
+  } catch (err) {
+    console.error(" Failed to book seats:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;
 

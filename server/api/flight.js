@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 
-const getFlightModel = require('./../models/flight');
+const getFlightModel = require('../models/flight');
 
  
 
@@ -30,26 +30,32 @@ router.get('/search-flights', async (req,res)=>{
              }
 });
 
-router.get('/flight/id', async (req, res)=>{
-     
+router.get('/flight/id', async (req, res) => {
+    try {
+        const Flight = getFlightModel();
+        
+        // Destructure query parameters
+        const { date, from, to} = req.query;
 
-     try{const Flight = getFlightModel();
-           const {from , to, fromCity, toCity, date }= req.query;
-  const query = {};
-        if (from) query['route.from'] = from;
-        if (to) query['route.to'] = to;
-        if (fromCity) query['route.fromCity'] = fromCity;
-        if (toCity) query['route.toCity'] = toCity;
-        if(date)query['route.date']= date;
-        console.log(query);
+        // Build query dynamically
+        const query = {};
+   
+        if (from) query['from'] = from;
+        if (to) query['to'] = to;
+     
+        if (date) query['date'] = new RegExp('^' + date);
+   
         
+
+        console.log("Search query:", query);
+
         const flights = await Flight.find(query);
+
         res.json(flights);
-        
     } catch (error) {
+        console.error("Error fetching flights:", error);
         res.status(500).json({ error: error.message });
     }
-     
 });
 
 
@@ -87,6 +93,49 @@ router.get('/flights/price-range', async(req, res)=>{
   catch(error){
       res.status(500).json({error: error.message});
   }
-})
-router.post('/')
+});
+router.post('/flight/add', async (req, res) => {
+  try {
+    const Flight = getFlightModel();
+
+    const {
+    
+        from,
+        to,
+        fromCity,
+        toCity,
+        date,
+        departureTime,
+        arrivalTime,
+      
+      flightNumber,
+      airline,
+      price,
+      duration
+    } = req.body;
+
+    const newFlight = new Flight({
+      
+        from,
+        to,
+        fromCity,
+        toCity,
+        date,
+        departureTime,
+        arrivalTime,
+      flightNumber,
+      airline,
+      price,
+      duration
+    });
+
+    const savedFlight = await newFlight.save();
+    res.status(201).json(savedFlight);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 module.exports = router;

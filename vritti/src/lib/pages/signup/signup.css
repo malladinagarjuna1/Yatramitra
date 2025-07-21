@@ -1,0 +1,91 @@
+/* Background */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 40px;
+  width: 350px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+  color: #fff;
+  text-align: center;
+}
+
+.title {
+  font-size: 26px;
+  margin-bottom: 30px;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #ffffffb0;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: #eaeaea;
+}
+
+.signup-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.signup-button:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+
+.login-link {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.login-link a {
+  color: #fff;
+  text-decoration: underline;
+}

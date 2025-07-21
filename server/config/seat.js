@@ -29,19 +29,10 @@ async function connectToMongoDB(){
 
 
 
-connectToMongoDB().then(()=>{
-
-       
-
-
-     console.log('database test API is  connected');
-}).catch(err=>{
-    console.error('Failed to connect to database', err);
-});
 
 module.exports ={
     connectToMongoDB,
-    getseatbookingDB: () => seatbookingDB,
+    getSeatbookingDB: () => seatbookingDB,
         getpassengerDB: () => passengerDB,
           getFlightBookingDB: () => flightBookingDB,
 };

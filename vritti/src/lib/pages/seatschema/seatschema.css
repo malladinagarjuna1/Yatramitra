@@ -1,0 +1,36 @@
+.seat {
+  width: 30px;
+  height: 30px;
+  margin: 2px;
+  text-align: center;
+  line-height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.seat.exit-row {
+  background-color: #6fcf97;
+}
+
+.seat.bassinet {
+  background-color: #f2c94c;
+}
+
+.seat.selected {
+  background-color: #2f80ed;
+  color: white;
+  font-weight: bold;
+}
+
+.seat.booked {
+  background-color: #999;
+  cursor: not-allowed;
+  color: white;
+}
+
+.aisle {
+  width: 20px;
+}

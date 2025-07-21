@@ -12,105 +12,197 @@ const Forgot= require('./../models/Forgot');
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
 
-
-
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
   let { name, email, password, dateofbirth } = req.body;
 
-  if (name == "" || email == "" || password == "" || dateofbirth == "") {
-    res.json({
+  // Validation
+  if (!name || !email || !password || !dateofbirth) {
+    return res.json({
       status: "FAILED",
       message: "Empty input fields!"
     });
-  } else if (!/^[a-zA-Z ]*$/.test(name)) {
-    res.json({
+  }
+
+  if (!/^[a-zA-Z ]*$/.test(name)) {
+    return res.json({
       status: "FAILED",
       message: "Invalid name entered"
     });
-  } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-    res.json({
+  }
+
+  if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    return res.json({
       status: "FAILED",
       message: "Invalid email entered"
     });
   }
-  else if (isNaN(new Date(dateofbirth).getTime())) {
+
+  if (isNaN(new Date(dateofbirth).getTime())) {
     return res.json({
       status: "FAILED",
       message: "Invalid date of birth entered"
     });
   }
-  else if (password.length < 9) {
-    res.json({
-      status: "Failed",
-      message: "Password should be at least 9 characters"
-    })
-  }
-  else {
-    User.findOne({ email }).then(existingUser => {
-      if (existingUser) {
-        return res.json({
-          status: "Failed",
-          message: "User with the provided mail already exists"
-        });
-      }
-      else {
-        const saltRounds = 10;
-        bcrypt.hash(password, saltRounds).then(hashedPassword => {
-          const newUser = new User({
-            name,
-            email,
-            password: hashedPassword,
-            dateofbirth: new Date(dateofbirth)
-          });
-          newUser.save().then(result => {
-            res.json({
-              status: "SUCCESS",
-              message: "Signup successfull",
-              data: result,
 
-            })
-          }).catch(err => {
-            console.log("Error saving user", err);
-            res.json({
-              status: "failed",
-              message: "am error occurred while saving the password",
-              error: err.message
-            })
-          })
-        })
-      }
-    }).catch(err => {
-      console.log(err);
-      res.json({
-        status: "Failed",
-        message: "an error occured while checking for existing user"
-      });
+  if (password.length < 9) {
+    return res.json({
+      status: "FAILED",
+      message: "Password should be at least 9 characters"
     });
   }
-})
 
-router.post('/signin', (req, res) => {
-   const { email, password } = req.body;
   try {
-    const user =  User.findOne({ email: email }).exec();
-    if (!user) {
-      return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
-    }
-console.log("Input password:", password);
-console.log("Hashed password from DB:", user.password);
-    const isMatch = bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.json({
+        status: "FAILED",
+        message: "User with the provided email already exists"
+      });
     }
 
-    const token = jwt.sign({ email:user.email }, JWT_SECRET, { expiresIn: '2h' });
-    console.log(token);
-    return res.json({ message: "Login successful", token });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create new user
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      dateofbirth: new Date(dateofbirth)
+    });
+
+    const result = await newUser.save();
+
+    return res.status(201).json({
+      status: "SUCCESS",
+      message: "Signup successful",
+      data: result
+    });
+
+  } catch (err) {
+    console.error("Signup error:", err);
+    return res.status(500).json({
+      status: "FAILED",
+      message: "An error occurred during signup",
+      error: err.message
+    });
+  }
+});
+
+// router.post('/signin', (req, res) => {
+//    const { email, password } = req.body;
+//   try {
+//     const user =  User.findOne({ email: email }).exec();
+//     if (!user) {
+//       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
+//     }
+// console.log("Input password:", password);
+// console.log("Hashed password from DB:", user.password);
+//     const isMatch = bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
+//     }
+
+//     const token = jwt.sign({ email:user.email }, JWT_SECRET, { expiresIn: '2h' });
+//     console.log(token);
+//     return res.json({ message: "Login successful", token });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Server error" });
+//   }
+// });
+router.post('/signin', async (req, res) => {
+  // Validate request body first
+  if (!req.body.email || !req.body.password) {
+    return res.status(400).json({
+      message: "Email and password are required",
+      errorCode: "MISSING_CREDENTIALS"
+    });
   }
 
+  const cleanEmail = req.body.email.trim().toLowerCase();
+  const cleanPassword = req.body.password.trim();
+
+  try {
+    console.log("\n--- SIGNIN ATTEMPT ---");
+    console.log(`Email: ${cleanEmail}`);
+    console.log(`Password: ${cleanPassword.length} characters`);
+
+    // Find user with password field explicitly selected
+    const user = await User.findOne({ email: cleanEmail }).select('+password').exec();
+    
+    if (!user) {
+      console.log('❌ User not found');
+      return res.status(401).json({ 
+        message: "Invalid credentials",
+        errorCode: "USER_NOT_FOUND"
+      });
+    }
+
+    console.log(`✅ User found: ${user.email}`);
+    console.log(`🔑 Password exists: ${!!user.password}`);
+    
+    // Check if password is present
+    if (!user.password) {
+      console.error('❌ Password missing in database record');
+      return res.status(500).json({
+        message: "Authentication system error",
+        errorCode: "MISSING_PASSWORD_HASH"
+      });
+    }
+
+    // Verify password
+    console.log('🔒 Comparing passwords...');
+    console.log("clean Password is", cleanPassword);
+    console.log("password in the db is ",user.password);
+    const isMatch = await bcrypt.compare(cleanPassword, user.password);
+    
+    if (isMatch) {
+      console.log('✅ Password matched');
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '2h' }
+      );
+      
+      console.log('🔐 Token generated');
+      return res.json({ 
+        message: "Login successful", 
+        token,
+        userId: user._id,
+        email: user.email
+      });
+    } else {
+      console.log('❌ Password mismatch');
+      return res.status(401).json({ 
+        message: "Invalid credentials",
+        errorCode: "PASSWORD_MISMATCH"
+      });
+    }
+    
+  } catch (error) {
+    console.error('\n--- SIGNIN ERROR ---');
+    console.error(error);
+    
+    // Special handling for bcrypt errors
+    if (error.message.includes('data and hash arguments required')) {
+      console.error('⚠️ Bcrypt argument error');
+      return res.status(400).json({
+        message: "Authentication failed",
+        details: "Password data is missing",
+        errorCode: "BCRYPT_ARG_ERROR"
+      });
+    }
+    
+    return res.status(500).json({ 
+      message: "Server error",
+      errorCode: "SERVER_ERROR"
+    });
+  }
 });
 
 
@@ -162,38 +254,32 @@ router.get("/verify",(req,res)=>{
   return res.status(200).json({message:"User is logged in"});
  
 });
-router.post('/resetPassword', (req, res) => {
-  const { token } = req.params;
-  const { password } = req.body;
+router.post('/resetPassword', async (req, res) => {
+  const { token, password } = req.body;
 
   try {
-    const user = user.findOne({
-      email: user.email
-    });
-    if (!user) {
-      return res.status(400).json({ message: "User not exist" });
+    const resetRecord = await Forgot.findOne({ token });
 
+    if (!resetRecord || resetRecord.expires < Date.now()) {
+      return res.status(400).json({ message: "Invalid or expired token" });
     }
-    const secret = process.env.JWT_SECRET_KEY + user.password;
-    const verify = jwt.verify(token, secret);
-    const encryptedPassword = bcrypt.hash(password, 10);
 
-    User.updateOne({
-      email: user.email,
-    },
-      {
-        $set: {
-          password: encryptedPassword,
-        },
-      });
-    user.save();
+    const user = await User.findOne({ email: resetRecord.email });
+    if (!user) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
 
-    res.status(200).json({ message: 'Password has been reset' });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
 
+    // Remove token after successful reset
+    await Forgot.deleteOne({ token });
+
+    res.status(200).json({ message: "Password has been reset" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'something went wrong' });
-
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
   }
 });
 

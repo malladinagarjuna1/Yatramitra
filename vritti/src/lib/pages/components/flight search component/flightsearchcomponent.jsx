@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './flightsearchcomponent.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlaneDeparture, faTrain, faBus } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +12,29 @@ const FlightSearch = () => {
   const [returnDate, setReturnDate] = useState("2024-09-11");
   const [passengerCount, setPassengerCount] = useState(1);
   const [state, setState] = useState("flight");
+  const navigate = useNavigate();
+
+
+const handleSearch = async () => {
+  const payload = {
+    from,
+    to,
+    date: departureDate,
+    
+  };
+
+  try {
+    const response = await axios.get("http://localhost:5000/api/flight/id", {
+      params: payload
+    });
+
+    console.log("Search Results:", response.data);
+    navigate('/flight', { state: { flights: response.data, from, to } });
+  } catch (err) {
+    console.error("Search failed:", err);
+  }
+};
+
 
   const renderForm = () => (
     <div className="flight-search">
@@ -88,7 +113,7 @@ const FlightSearch = () => {
           ⇄
         </button>
 
-        <button className="search-btn">🔍 Search Flight</button>
+        <button className="search-btn"onClick={handleSearch}>🔍 Search Flight</button>
       </div>
     </div>
   );
