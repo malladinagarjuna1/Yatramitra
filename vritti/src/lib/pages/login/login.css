@@ -1,14 +1,3 @@
-/* Background */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #74ebd5, #9face6);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 /* Main container */
 .login-container {
@@ -16,6 +5,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+    height: 100vh;
+  width: 100vw;
+    background-size: cover;
+  background-position: center;
+  background-color: black;
+
 }
 
 /* Glass Card */
@@ -94,3 +89,4 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
+

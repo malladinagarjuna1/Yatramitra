@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
 
 import React, { useState } from 'react';
-import './passenger.css';
 
 
 import { Button } from '../components/ui/button';

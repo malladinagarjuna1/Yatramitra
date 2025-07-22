@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import image1 from '../assets/bg1.jpg'
+import image2 from '../assets/bg2.jpg'
+import image3 from '../assets/bg3.jpg'
 import './login.css';
+const backgrounds = [
+image1, image2, image3
+
+];
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [bgIndex, setBgIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogin = async(e) => {
     e.preventDefault();
+
+
+
    
   // try {
   //   const response = await fetch('http://localhost:5000/signin', {
@@ -30,19 +50,23 @@ const LoginPage = () => {
   //   alert('Server error, please try again later.');
   // }
   try{
-    const response = await fetch('http://localhost:5000/signin', {
+    const response = await fetch('http://localhost:5000/login', {
       method: 'POST',
       headers:{
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({email, password})
-    });
+      body: JSON.stringify({email: email.trim().toLowerCase(), password: password.trim()})
+    }); 
     const data = await response.json();
-    if(response.ok){
-      alert('Login successfull');
+    if(response.ok && data.token){
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', data.name || data.email);
+        // Navigate to landing page
+        navigate('/');
     }
     else{
-      alert(data.message|| 'login failed');
+        alert(data.message || 'Login failed. Please check your credentials.');
+        console.error('Login failed:', data);
     }
 
   }
@@ -53,7 +77,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container"
+        style={{
+        backgroundImage: `url(${backgrounds[bgIndex]})`,
+
+        transition: 'background-image 1s ease-in-out',
+      }}>
       <form className="glass-card" onSubmit={handleLogin}>
         <h2 className="title">Login</h2>
 
@@ -80,7 +109,7 @@ const LoginPage = () => {
         </div>
 
         <button type="submit" className="login-button">Sign In</button>
-        <p className="signup-text">Don’t have an account? <a href="localhost:5173/signup">Sign Up</a></p>
+        <p className="signup-text">Don’t have an account? <Link to="/signup">Sign Up</Link></p>
       </form>
     </div>
   );
