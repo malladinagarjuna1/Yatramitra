@@ -1,6 +1,6 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right top, #65dfc9, #6cdbeb);
+  background: linear-gradient(to right top, #000000, #ffffff);
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -12,16 +12,18 @@ body {
 }
 
 .flight-search {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgb(255, 255, 255);
   padding: 30px;
   max-width: 800px;
   width: 90%;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 rgb(255, 255, 255);
   color: #fff;
+  margin: 20px auto;
+  position: relative;
 }
 
 .trip-type {

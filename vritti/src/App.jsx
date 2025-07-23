@@ -15,7 +15,8 @@ import React from 'react';
 
 import ReactDOM from "react-dom";
 import TravelPackage from "./lib/pages/components/travelpackages/travelpackages.jsx";
-import Video from './components/video/video.jsx'
+import Video from '../src/lib/pages/components/video/video.jsx'
+import GlassmorphismDiv from '../src/lib/pages/component/component.jsx';
 
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
 
     return () => {
      
-      
+       
     };
   }, [location.pathname]);
 
@@ -56,7 +57,7 @@ function App() {
           
             zIndex: 1000,
             padding: '5px 5px',
-            boxShadow: '0 2px 5px rgba(139, 1, 1, 0.1)',
+            boxShadow: '0 2px 5px rgba(139, 1, 1, 0.08)',
           }}
         >
           <img
@@ -93,19 +94,32 @@ function App() {
           path="/"
           element={
             <>
-              <div className={"blue-300"} style={{marginTop:"10px"}} >
-             <Video/>
-                <h2>Yatramita - YOUR BEST TRAVEL COMPANION</h2>
-              </div>
-              <div style={{ alignContent:'center', paddingTop: '1200px', display: 'flex' }}>
-                <FlightSearch />
-              </div>
-              <div style={{paddingTop: '90px'}}>
-                <TravelPackage />
-                </div>
-                <div style ={{paddingTop: '50px'}}>
-<Footer/>
-                </div>
+          
+      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', paddingTop: '4000px' , display : 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      
+        <Video/> 
+        <div style={{  position: 'absolute',
+            top: '90%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1,
+            background: 'rgba(255, 255, 255, 0.05)',
+            padding: '25px',
+            borderRadius: '10px',
+            width: '100%',
+            maxWidth: '1000px',}}>
+          <FlightSearch />
+        </div>
+      </div>
+      <div><GlassmorphismDiv/></div>
+       <div><GlassmorphismDiv/></div>
+              <div><GlassmorphismDiv/></div>
+      <div style={{ paddingTop: '90px' }}>
+        <TravelPackage />
+      </div>
+      <div style={{ paddingTop: '50px' }}>
+        <Footer />
+      </div>
             
             </>
 

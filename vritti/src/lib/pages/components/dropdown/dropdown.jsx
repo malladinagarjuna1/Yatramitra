@@ -6,8 +6,7 @@ function DropDownMenu({label, items=[]}){
         <div className="Navbar">
             <div 
             className="nav-item"
-            onMouseEnter={()=>setisDropDownOpen(true)}
-            onMouseLeave={()=>setisDropDownOpen(false)}
+          
             >
                 <span className="nav-link">{label}</span>
                
