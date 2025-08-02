@@ -1,6 +1,8 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import './travelpackages.css';
+import { Link } from 'react-router-dom'
+
 const containerVariants = {
   hidden: {},
   visible: {
@@ -17,7 +19,7 @@ const itemVariants = {
 
 function TravelPackage(){
   
-const places = ["Goa", "Kashmir", "Kerala", "Manali", "Jaipur", "Rajasthan"];
+const places = ["Goa", "Kashmir", "Kerala", "Manali", "Jaipur", "Tirupati"];
 
 
  return(
@@ -46,10 +48,14 @@ const places = ["Goa", "Kashmir", "Kerala", "Manali", "Jaipur", "Rajasthan"];
                 className="card-image"
               />
               <h3 className="card-title">{place}</h3>
-              <p className="card-subtext">Click to view packages</p>
+<Link to="/explore-packages">
+  <button className="card-button">Explore {place}</button>
+</Link>
+
+           
             </motion.div>
           ))}
-        </motion.div>
+        </motion.div> 
       </section>
 
   

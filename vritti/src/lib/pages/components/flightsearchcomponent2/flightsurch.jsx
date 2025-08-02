@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './flightsearchcomponent.css';
+import './flightsurch.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlaneDeparture, faTrain, faBus } from '@fortawesome/free-solid-svg-icons';
 const FlightSearch = () => {
@@ -14,7 +14,7 @@ const FlightSearch = () => {
   const [state, setState] = useState("flight");
   const navigate = useNavigate();
 
-'3'
+
 const handleSearch = async () => {
   const payload = {
     from,
@@ -286,7 +286,6 @@ const handleSearch = async () => {
 <div className="vertical-tabs-container">
     <div className="tabs">
         
-
 
 
       <button onClick={() => setState("flight")}style={{  backgroundColor: "rgba(255, 255, 255, 0.15)",  backdropFilter: "blur(15px)"}}>

@@ -116,15 +116,17 @@ router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email: email.toLowerCase() }).exec();
     if (!user || !user.password) {
+      console.log(user.password)
       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
     }
 
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    // Add this check before bcrypt.compare in server:
+   
+  
 if (!password || password.length < 6) {
   return res.status(400).json({ message: "Invalid password format" });
 }
+ const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Your credentials are incorrect. Please try again.", error });
     }
@@ -210,7 +212,6 @@ router.post('/resetPassword', async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    // Remove token after successful reset
     await Forgot.deleteOne({ token });
 
     res.status(200).json({ message: "Password has been reset" });

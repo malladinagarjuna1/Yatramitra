@@ -55,8 +55,8 @@ const releaseExpiredLocks = async () => {
   );
 };
 
-// Schedule the lock release function to run periodically
-setInterval(releaseExpiredLocks, 60 * 1000); // Every minute
+
+setInterval(releaseExpiredLocks, 60 * 1000); 
 
 router.put('/seats/lock', async (req, res) => {
   try {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import './component.css';
+import './compo.css';
 
 const GlassmorphismDiv = () => {
   return (
@@ -15,14 +15,18 @@ const GlassmorphismDiv = () => {
           <div className="image-section">
             <motion.div
               className="image-placeholder first-image"
-              style={{ backgroundImage: 'url("https://i.pinimg.com/736x/1d/7d/82/1d7d82b10da4b0a887f2f3adb47eb9f1.jpg")' }}
+              style={{
+                backgroundImage: 'url("https://images.pexels.com/photos/1391486/pexels-photo-1391486.jpeg")',
+              }}
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             />
             <motion.div
               className="image-placeholder second-image"
-              style={{ backgroundImage: 'url("https://i.pinimg.com/736x/1d/7d/82/1d7d82b10da4b0a887f2f3adb47eb9f1.jpg")' }}
+              style={{
+                backgroundImage: 'url("https://images.pexels.com/photos/6765302/pexels-photo-6765302.jpeg")',
+              }}
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -34,28 +38,28 @@ const GlassmorphismDiv = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              Why Choose Our Flights?
+              Why Choose Our Buses?
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
-              We Make Air Travel Smart, Affordable, and Hassle-Free.
+              Experience Comfortable, Safe, and Affordable Bus Travel.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              Here’s Why Thousands of Travelers Trust Us for Their Flight Bookings:
+              Here's why thousands of travelers choose our bus services every day:
             </motion.p>
             <div className="features">
               {[
-                'Flexible Flight Options',
-                'Best Price Guarantee',
-                'Global Connectivity',
-                'Secure & Reliable Booking'
+                'Comfortable Seating',
+                'Timely Departures & Arrivals',
+                'Affordable Ticket Prices',
+                'Real-Time Bus Tracking',
               ].map((feature, index) => (
                 <motion.div
                   key={feature}
@@ -66,10 +70,14 @@ const GlassmorphismDiv = () => {
                 >
                   <h3>{feature}</h3>
                   <p>
-                    {feature === 'Flexible Flight Options' && 'Choose from a wide range of domestic and international flights that suit your schedule and budget.'}
-                    {feature === 'Best Price Guarantee' && 'Get the lowest airfare deals by comparing rates from hundreds of airlines and travel partners.'}
-                    {feature === 'Global Connectivity' && 'Fly to over 100+ destinations worldwide with seamless booking and multilingual support.'}
-                    {feature === 'Secure & Reliable Booking' && 'Your bookings are protected with top-tier security, and we provide real-time travel updates.'}
+                    {feature === 'Comfortable Seating' &&
+                      'Enjoy spacious, reclining seats and air-conditioned coaches for a relaxing journey.'}
+                    {feature === 'Timely Departures & Arrivals' &&
+                      'We value your time – our buses run on accurate schedules with minimal delays.'}
+                    {feature === 'Affordable Ticket Prices' &&
+                      'Travel across cities without breaking your budget. We offer the best fares guaranteed.'}
+                    {feature === 'Real-Time Bus Tracking' &&
+                      'Know your bus location at all times with GPS-enabled live tracking on our app.'}
                   </p>
                 </motion.div>
               ))}

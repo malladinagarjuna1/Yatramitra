@@ -1,9 +1,9 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  
+  background: linear-gradient(to right top, #000000, #ffffff);
   margin: 0;
   padding: 0;
-  height: 0vh;
+  height: 100vh;
   display: flex;
 
   justify-content: left;

@@ -66,7 +66,9 @@ const LoginPage = () => {
     }
     else{
         alert(data.message || 'Login failed. Please check your credentials.');
-        console.error('Login failed:', data);
+     
+            console.error('Login error:', error);
+    alert(`Server error: ${error.message || error}`);
     }
 
   }

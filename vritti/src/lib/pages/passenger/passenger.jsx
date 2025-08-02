@@ -31,7 +31,6 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
         return;
       }
 
-      // 1. Lock the seats
       await axios.put('http://localhost:5000/api/seats/lock', {
         flightNumber: flight.flightNumber,
         seatNumbers: selectedSeats,

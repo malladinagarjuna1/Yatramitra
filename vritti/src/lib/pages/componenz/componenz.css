@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url('') no-repeat center center/cover;
+  background: url('https://images.pexels.com/photos/2033343/pexels-photo-2033343.jpeg') no-repeat center center/cover;
   padding: 20px;
   position: relative;
 }
@@ -152,7 +152,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('https://i.pinimg.com/736x/1d/7d/82/1d7d82b10da4b0a887f2f3adb47eb9f1.jpg') no-repeat center center/cover;
+  background: url('https://images.pexels.com/photos/2033343/pexels-photo-2033343.jpeg') no-repeat center center/cover;
   opacity: 0.3;
   z-index: 1;
 }
