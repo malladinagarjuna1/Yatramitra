@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 5000;
 require('dotenv').config();
+const path = require('path');
 
 const cors = require('cors');
 const { connectToMongoDB } = require('./config/db');
@@ -26,6 +27,9 @@ connectToMongoDB()
 
     const payment = require('./api/payment.js');
     app.use('/api', payment);
+    const ticket = require('./api/ticket.js');
+  app.use('/api', express.static(path.join(__dirname, 'tickets')), ticket);
+
 
     app.listen(port, () => {
       console.log(`server is running on port ${port}`);

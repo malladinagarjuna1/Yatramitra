@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const getPassengerModel = require('../models/passenger');
+const nodemailer = require("nodemailer");
+const QRCode = require('qrcode');
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
+
+const path = require('path');
+
 
 router.post('/passengerdetails', async (req, res) => {
     try {
@@ -34,6 +41,34 @@ router.post('/passengerdetails', async (req, res) => {
             error: err.message
         });
     }
+    transporter.sendMail(mailOptions);
+});
+
+
+router.get('/api/generate-ticket', async (req, res) => {
+  const { bookingId } = req.query;
+
+  // Fetch booking details from DB using bookingId
+  const booking = await Booking.findById(bookingId);
+
+  const doc = new PDFDocument();
+  const filename = `ticket-${bookingId}.pdf`;
+  const filePath = path.join(__dirname, 'tickets', filename);
+
+  doc.pipe(fs.createWriteStream(filePath));
+
+  doc.fontSize(20).text('Flight Ticket', { align: 'center' });
+  doc.moveDown();
+  doc.text(`Flight: ${booking.flightNumber}`);
+  doc.text(`Passenger: ${booking.passengerName}`);
+  doc.text(`Seats: ${booking.seatNumbers.join(', ')}`);
+  doc.text(`From: ${booking.from} ➡️ To: ${booking.to}`);
+  doc.text(`Departure: ${booking.departure}`);
+  doc.text(`Arrival: ${booking.arrival}`);
+
+  doc.end();
+
+  res.json({ ticketURL: `http://localhost:5000/tickets/${filename}` });
 });
 
 module.exports = router;

@@ -55,13 +55,16 @@ const LoginPage = () => {
       headers:{
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({email: email.trim().toLowerCase(), password: password.trim()})
+      body: JSON.stringify({email: email, password: password})
+    
     }); 
+  
     const data = await response.json();
+    console.log(data);
     if(response.ok && data.token){
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', data.name || data.email);
-        // Navigate to landing page
+    
         navigate('/');
     }
     else{

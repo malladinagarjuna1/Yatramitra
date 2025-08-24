@@ -54,13 +54,16 @@ router.post('/signup', (req, res) => {
       }
       else {
         const saltRounds = 10;
+        console.log("Svig with ", password);
         bcrypt.hash(password, saltRounds).then(hashedPassword => {
           const newUser = new User({
             name,
             email,
             password: hashedPassword,
-            dateofbirth: new Date(dateofbirth)
+            dateofbirth: new Date(dateofbirth),
+         
           });
+             console.log(hashedPassword);
           newUser.save().then(result => {
             res.json({
               status: "SUCCESS",
@@ -88,6 +91,7 @@ router.post('/signup', (req, res) => {
   }
 })
 
+
 // router.post('/signin', (req, res) => {
 //    const { email, password } = req.body;
 //   try {
@@ -110,30 +114,90 @@ router.post('/signup', (req, res) => {
 //     return res.status(500).json({ message: "Server error" });
 //   }
 // });
+// router.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     // Validate input
+//     if (!email || !password) {
+//       return res.status(400).json({ message: "Email and password are required" });
+//     }
+
+//     if (password.length < 9) {
+//       return res.status(400).json({ message: "Password must be at least 9 characters long" });
+//     }
+
+//     // Find user
+//     const user = await User.findOne({ email }).exec();
+//     if (!user || !user.password) {
+//       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
+//     }
+
+//     // Compare password
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
+//     }
+
+//     // Generate JWT
+//     const token = jwt.sign(
+//       { id: user._id, email: user.email },
+//       JWT_SECRET,
+//       { expiresIn: '2h' }
+//     );
+
+//     // Set cookie (for cross-site cookies, sameSite:"No ne" + secure:true)
+//     res.cookie("token", token, {
+//       httpOnly: true,
+//       secure: true,
+//       sameSite: "None",
+//       path: "/",
+//       expires: new Date(Date.now() + 86400000), // 1 day
+//     });
+
+//     return res.json({
+//       message: "Login successful",
+//       token,
+//       name: user.name,
+//       email: user.email,
+//     });
+
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
+
   try {
-    const user = await User.findOne({ email: email.toLowerCase() }).exec();
+   const user = await User.findOne({ email: email}).exec();
+  
     if (!user || !user.password) {
       console.log(user.password)
       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
     }
-
+ 
 
    
   
-if (!password || password.length < 6) {
+if (!password || password.length < 9) {
   return res.status(400).json({ message: "Invalid password format" });
 }
+console.log(password);
+console.log(user.password);
  const isMatch = await bcrypt.compare(password, user.password);
+ console.log(isMatch);
+ 
     if (!isMatch) {
-      return res.status(401).json({ message: "Your credentials are incorrect. Please try again.", error });
+      return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
     }
-
 
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '2h' });
     console.log(token);
+         
     return res.json({ message: "Login successful", token ,
       name: user.name,
       email: user.email

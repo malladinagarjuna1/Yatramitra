@@ -48,6 +48,7 @@ function App() {
   return (
     <>
       <div   style={{minHeight: '100vh', position: 'relative'}}>
+
       {!hideLayoutRoutes.includes(location.pathname) && (
         <div
           className="header"

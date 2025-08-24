@@ -16,7 +16,7 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
       [field]: value
     });
   };
-  // Add this at the beginning of handleProceedToPayment
+
   const handleProceedToPayment = async () => {
     try {
       const firstPassenger = passengerDetails[selectedSeats[0]];
@@ -30,14 +30,28 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
         alert('Please enter a valid email address.');
         return;
       }
-
+      console.log(flight);
       await axios.put('http://localhost:5000/api/seats/lock', {
         flightNumber: flight.flightNumber,
         seatNumbers: selectedSeats,
+        from: flight.from,
+        to: flight.to,
+        departure: flight.departureTime,
+        arrival: flight.arrivalTime
       });
 
-      // 2. Create a checkout session
+    
       const totalAmount = selectedSeats.length * flight.price;
+      const obj= {
+         email: firstPassenger.email,
+          flightNumber: flight.flightNumber,
+          seatNumbers: selectedSeats,
+          from: flight.from,
+          to: flight.to,
+          departure: flight.departureTime,
+          arrival: flight.arrivalTime
+      }
+      console.log(obj);
       const response = await fetch('http://localhost:5000/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,6 +61,10 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
           email: firstPassenger.email,
           flightNumber: flight.flightNumber,
           seatNumbers: selectedSeats,
+          from: flight.from,
+          to: flight.to,
+          departure: flight.departureTime,
+          arrival: flight.arrivalTime
         }),
       });
 
@@ -56,7 +74,7 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
         throw new Error(session.error || 'Failed to create checkout session.');
       }
 
-      // 3. Redirect to Stripe checkout
+
       window.location.href = session.url;
 
     } catch (error) {
@@ -87,7 +105,6 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
             <div key={seatId} className="passenger-form">
               <h3>Passenger {index + 1} — Seat {seatId}</h3>
 
-              {/* Gender Selection */}
               <div className="gender-selection">
                 <label>
                   <input
@@ -109,7 +126,6 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
                 </label>
               </div>
 
-              {/* Name Inputs */}
               <div className="input-box">
                 <label>First and Middle Name</label>
                 <input className='jam'
@@ -129,7 +145,7 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
                 />
               </div>
 
-              {/* DOB */}
+       
               <div className="input-box">
                 <label>Date of Birth</label>
                 <input className='jam'
@@ -139,11 +155,9 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
                 />
               </div>
 
-              {/* Optional Buttons */}
+          
               <button className="optional-btn">Special Assistance</button>
               <button className="optional-btn">Add IndiGo BluChip Membership Number</button>
-
-              {/* Contact Section - only once for first passenger */}
               {index === 0 && (
                 <>
                   <h4>Contact details</h4>

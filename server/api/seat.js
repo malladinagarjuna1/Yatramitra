@@ -45,9 +45,10 @@ router.get('/seats', async (req, res) => {
 
 
 
-// Function to release expired locks
+
 const releaseExpiredLocks = async () => {
   const Seat = getSeatModel();
+
   const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
   await Seat.updateMany(
     { status: 'locked', lockedAt: { $lt: fiveMinutesAgo } },
