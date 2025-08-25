@@ -99,7 +99,7 @@ router.post('/flight/add', async (req, res) => {
     const Flight = getFlightModel();
 
     const {
-    
+      
         from,
         to,
         fromCity,

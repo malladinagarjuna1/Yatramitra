@@ -3,17 +3,31 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './success.css';
 import TicketPDF from '../tickets/tickets';
-const handleDownload= async(ticketData)=>{
+import { pdf } from '@react-pdf/renderer';
+
+
+// const handleDownload= async(ticketData)=>{
+//   console.log(ticketData);
+//   const blob = await pdf(<TicketPDF ticket={ticketData}/>).toBlob();
+//   const url = URL.createObjectURL(blob);
+//     const a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'ticket.pdf';
+//     a.click();
+//     URL.revokeObjectURL(url);
+
+// }
+const handleDownload = async (ticketData) => {
   console.log(ticketData);
   const blob = await pdf(<TicketPDF ticket={ticketData}/>).toBlob();
-  const url = URL.createObjectURL(obj);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'ticket.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ticket.pdf';
+  a.click();
+  URL.revokeObjectURL(url);
+};
 
-}
 
         
 const PaymentSuccess = () => {
@@ -59,7 +73,7 @@ const PaymentSuccess = () => {
     } catch (err) {
       setError('Server error verifying payment.');
     } finally {
-      setLoading(false);
+      setLoading(false);0
     }
   };
 

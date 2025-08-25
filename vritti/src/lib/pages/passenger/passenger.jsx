@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { Button } from '../components/ui/button';
 import axios from 'axios';
 
-const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange }) => {
+const   Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange }) => {
   const handleChange = (seatId, field, value) => {
     onPassengerChange(seatId, {
       ...passengerDetails[seatId],
@@ -83,7 +83,7 @@ const Passenger = ({ selectedSeats, flight, passengerDetails, onPassengerChange 
     }
   };
 
-  return (
+  return (  
     <div className="flight-form-container">
       <div className="tabs">
         <button
