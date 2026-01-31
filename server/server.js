@@ -5,9 +5,15 @@ require('dotenv').config();
 const path = require('path');
 
 const cors = require('cors');
-const { connectToMongoDB } = require('./config/db');
 
-app.use(cors());
+const { connectToMongoDB } = require('./config/db');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+app.use(cors({
+ origin: "http://localhost:5173", 
+  credentials: true      
+
+}));
 app.use(express.json());
 
 connectToMongoDB()

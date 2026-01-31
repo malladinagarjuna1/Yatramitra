@@ -36,6 +36,10 @@ height: 100%;
     box-shadow: none;
   opacity: 80%;
 }
+.nav-link:hover,
+.nav-link.active {
+  border-bottom: 2px solid #ffffff;
+}
   @keyframes glow {
     from {
       text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;

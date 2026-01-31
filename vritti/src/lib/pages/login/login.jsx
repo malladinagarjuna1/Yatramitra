@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+
+
+
 import image1 from '../assets/bg1.jpg'
 import image2 from '../assets/bg2.jpg'
 import image3 from '../assets/bg3.jpg'
@@ -55,10 +58,12 @@ const LoginPage = () => {
       headers:{
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({email: email, password: password})
-    
+      body: JSON.stringify({email: email, password: password}),
+    credentials: "include",
     }); 
-  
+  const res = await fetch("http://localhost:5000/profile", {
+  credentials: "include"
+});
     const data = await response.json();
     console.log(data);
     if(response.ok && data.token){

@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Forgot= require('./../models/Forgot');
-const { error } = require('console');
+
+
 
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
@@ -179,11 +180,7 @@ router.post('/login', async (req, res) => {
       console.log(user.password)
       return res.status(401).json({ message: "Your credentials are incorrect. Please try again." });
     }
- 
-
-   
-  
-if (!password || password.length < 9) {
+ if (!password || password.length < 9) {
   return res.status(400).json({ message: "Invalid password format" });
 }
 console.log(password);
@@ -197,7 +194,13 @@ console.log(user.password);
 
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '2h' });
     console.log(token);
-         
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,  
+      sameSite: "Strict",
+    });
+
+
     return res.json({ message: "Login successful", token ,
       name: user.name,
       email: user.email
@@ -207,7 +210,17 @@ console.log(user.password);
     return res.status(500).json({ message: "Server error" });
   }
 });
+router.get("/profile",(req, res)=>{
+  const token = req.cookies.token;
+  if(!token) return res.status(401).json({message: "no token"});
+  try{
+    const decoded= jwt.verify(token, SECRET);
+    res.status(403).json( {user: decoded});
 
+  }catch{
+    res.status(403).json({message: "invalid token"});
+  }
+})
 
 router.post('/requestPasswordReset', async (req, res) => {
  try{
